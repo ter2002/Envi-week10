@@ -28,7 +28,7 @@ pipeline {
                             sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                         }
                         sh 'docker push ter2002/back_img:1.0'
-                        sh 'docker push ter2002front_img:1.0'
+                        sh 'docker push ter2002/front_img:1.0'
                     }
                 }
             }
