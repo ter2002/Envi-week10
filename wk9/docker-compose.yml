@@ -5,9 +5,9 @@ services:
     build:
       context: ./back
       dockerfile: Dockerfile
-    image: ter2002/backIMG:1.0
+    image: ter2002/back_img:1.0
   frontend:
     build:
       context: ./front
       dockerfile: Dockerfile
-    image: ter2002/frontIMG:1.0
+    image: ter2002/front_img:1.0
