@@ -1,45 +1,36 @@
 pipeline {
     agent any
-        environment {
-            DOCKER_CONTAINER_NAME_FRONTEND = "frontend_server"
-            DOCKER_CONTAINER_NAME_BACKEND = "backend_server"
-            DOCKER_IMAGE_NAME_FRONTEND     = "ter2002/front_img:1.0"
-            DOCKER_IMAGE_NAME_BACKEND     = "ter2002/back_img:1.0"
+    environment {
+        DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+    }
+    stages {
+        stage('Trigged') {
+            steps {
+                echo "Hello $DOCKERHUB_CREDENTIALS_USR from Slave"
+            }
         }
-
-
-        stages {
-            stage('Initialize Stage') {
-                steps {
-                    echo 'Initial : Delete containers and images'
-                    sh 'docker stop ${DOCKER_CONTAINER_NAME_FRONTEND} || true'
-                    sh 'docker stop ${DOCKER_CONTAINER_NAME_BACKEND} || true'
-                    sh 'docker rm ${DOCKER_CONTAINER_NAME_FRONTEND} || true'
-                    sh 'docker rm ${DOCKER_CONTAINER_NAME_BACKEND} || true'
-                    sh 'docker rmi ${DOCKER_IMAGE_NAME_FRONTEND} || true'
-                    sh 'docker rmi ${DOCKER_IMAGE_NAME_BACKEND} || true'
-                }
-            }
-
-            stage('Pull Stage') {
-                steps {
-                    dir('wk9') {
-                        echo "Current path is ${pwd()}"
-                        sh "docker pull ${DOCKER_IMAGE_NAME_BACKEND}"
-                        sh "docker pull ${DOCKER_IMAGE_NAME_FRONTEND}"
-                    }
-                }
-            }
-
-            stage('Run Stage') {
-                steps {
-                    dir('wk9') {
-                        echo "Current path is ${pwd()}"
-                        sh "docker run -d -p 8888:80 --name ${DOCKER_CONTAINER_NAME_BACKEND}  ${DOCKER_IMAGE_NAME_BACKEND}"
-                        sh "docker run -d -p 8082:80 --name ${DOCKER_CONTAINER_NAME_FRONTEND} ${DOCKER_IMAGE_NAME_FRONTEND}"
-                    }
-                }
-            }
-        
+        stage('Login Stage') {
+          steps {
+            echo "Login : Logging in . . ."
+            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+          }
         }
+        stage('Pull from Docker') {
+          steps {
+               dir('wk9') { // change directory to Lab_docker_Jenkins
+                    echo "Pull . ."
+                    sh "docker-compose pull"
+                }
+          }
+        }
+        stage('Start stage') {
+            steps {
+                dir('wk9') { // change directory to Lab_docker_Jenkins
+                    echo "Start . ."
+                    sh "docker-compose up -d"
+                }
+            }
+        }
+ 
+}
 }
