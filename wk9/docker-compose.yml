@@ -18,7 +18,7 @@
 services:
   fe:
     build: ./front
-    image: ter2002/fe:lastest
+    image: sorachat2002/fe:lastest
     ports: 
       - 3000:80
     links:
@@ -29,7 +29,7 @@ services:
 
   be:
     build: ./back
-    image: ter2002/be:lastest
+    image: sorachat2002/be:lastest
     ports: 
       - 8088:80
     networks:
