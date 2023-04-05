@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    image: kedmanee/my-backend_image:1.0
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    image: kedmanee/my-frontend_image:1.0
